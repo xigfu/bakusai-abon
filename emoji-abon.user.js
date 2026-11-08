@@ -2,7 +2,7 @@
 // @name         爆サイの荒らしレスをあぼーん
 // @namespace    http://tampermonkey.net/
 // @author       xigfu
-// @version      1.26
+// @version      1.27
 // @updateURL    https://xigfu.github.io/bakusai-abon/emoji-abon.user.js
 // @downloadURL  https://xigfu.github.io/bakusai-abon/emoji-abon.user.js
 // @description  指定したタイトルのスレッドで、絵文字や設定した言葉・顔文字・記号を含む本文を「あぼーん」にします。
