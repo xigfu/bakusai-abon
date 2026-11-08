@@ -7,7 +7,17 @@
 <select id="browser-choice" style="display:block;width:100%;font:inherit;padding:12px;margin:12px 0"><option value="android" selected>Android版Firefox</option><option value="chrome">PC版Chrome（Windows／macOS）</option><option value="firefox">PC版Firefox（Windows／macOS）</option></select>
 <p id="compatibility">Android版Firefoxは動作確認済みです。iPhoneは今回の案内対象外です。</p>
 <p class="note">この道具は荒らしかどうかを判断しません。<strong>普通の投稿でも、絵文字があれば隠します。</strong>初期設定では、タイトルまたは見出しに「大番会館 新宿店」を含むスレッドが対象です。対象タイトルは設定画面で変更・複数指定できます。表示はスクリプトを入れた自分のブラウザだけで変わり、掲示板の投稿そのものは消えません。</p>
-<nav aria-label="目次"><a id="pc-jump" href="#pc-check" hidden>1．PCで追加済みか確認する</a><a href="#check">AndroidのFirefoxとTampermonkeyを入れたつもりの方はこちら</a><a href="#firefox">Firefoxがない方はこちら</a><a href="#script">3．スクリプトを入れる</a><a href="#add-rules">言葉・顔文字・記号を追加する</a><a href="#settings-reference">「あぼーん設定」の設定項目</a><a href="#samples">禁止ワード・顔文字・記号のサンプル</a><a href="#help">うまくいかない・元に戻したい</a></nav>
+<nav aria-label="目的に合わせた案内">
+<p>いまの状況や、やりたいことに合うリンクを選んでください。</p>
+<a id="pc-jump" href="#pc-check" hidden>PCで初めて使う方・追加できたか分からない方は、ここから確認してください</a>
+<a href="#check">AndroidのFirefoxとTampermonkeyを入れたつもりの方は、追加できているか確認してください</a>
+<a href="#firefox">AndroidにFirefoxがまだない方は、こちらから入れてください</a>
+<a href="#script">Tampermonkeyの追加と必要な設定が済んだ方は、あぼーん用スクリプトを入れてください</a>
+<a href="#add-rules">非表示にしたい言葉・顔文字・記号を追加したい方は、こちらの手順で設定してください</a>
+<a href="#settings-reference">設定画面の項目やボタンの使い方が分からない方は、こちらを確認してください</a>
+<a href="#samples">登録する言葉の例が欲しい方は、こちらのサンプルから必要なものをコピーしてください</a>
+<a href="#help">うまく動かない方・元の表示に戻したい方は、こちらの対処方法を確認してください</a>
+</nav>
 <section id="check"><h2>1．Tampermonkeyが追加済みか確認</h2><p>Firefoxの最初の画面に「Tampermonkey」の四角いショートカットがあっても、機能が追加できたかどうかは別です。</p><ol><li><strong>Firefoxアプリ</strong>を開きます。</li><li>画面の上か下にある<strong>「⋮」</strong>（点が縦に3つ並んだボタン）を押します。</li><li><strong>「拡張機能」または「アドオン」</strong>を押します。表示名や位置はバージョンによって異なります。</li><li>追加済みの一覧に<strong>Tampermonkey</strong>があるか確認します。単におすすめの一覧にあるだけでは、追加済みとは限りません。</li></ol><p>追加済みで有効になっていれば、<a href="#script">「3．スクリプトを入れる」</a>へ。なければ下へ進みます。</p></section>
 <section id="firefox"><h2>Firefoxがまだない場合</h2><p>Playストアで「Firefox」を探します。提供元が<strong>Mozilla</strong>のFirefoxをインストールして開いてください。</p><a class="button" href="https://play.google.com/store/apps/details?id=org.mozilla.firefox" target="abone-guide-work">PlayストアのFirefoxを見る</a><p>次の操作はFirefoxの中で行います。この案内もFirefoxで開いてください。</p></section>
 <section id="addon"><h2>2．Tampermonkeyを追加する</h2><p><strong>ここからはFirefoxで操作してください。</strong>GoogleアプリやChromeでは進めないでください。</p><a class="button" href="https://addons.mozilla.org/ja/firefox/addon/tampermonkey/" target="abone-guide-work">Tampermonkeyの公式配布ページを開く（作業用タブ）</a><ol><li>名前が<strong>Tampermonkey</strong>、作者が<strong>Jan Biniok</strong>であることを確認します。</li><li><strong>「Firefoxへ追加」</strong>などの追加ボタンを押します。</li><li>権限の確認を読み、追加する場合は<strong>「追加」</strong>を押します。ウェブページの表示を書き換えるため、広いアクセス権限を求める拡張機能です。</li><li>プライベートブラウジングの許可は、通常のタブで使う場合は変更せず進められます。完了のボタンが出たら押します。</li></ol><p>終わったら、この案内のタブへ切り替えて戻ります。作業用タブは閉じずに残して構いません。</p></section>
