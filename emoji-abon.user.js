@@ -1,7 +1,10 @@
 // ==UserScript==
 // @name         爆サイの荒らしレスをあぼーん
 // @namespace    http://tampermonkey.net/
-// @version      1.25
+// @author       xigfu
+// @version      1.26
+// @updateURL    https://xigfu.github.io/bakusai-abon/emoji-abon.user.js
+// @downloadURL  https://xigfu.github.io/bakusai-abon/emoji-abon.user.js
 // @description  指定したタイトルのスレッドで、絵文字や設定した言葉・顔文字・記号を含む本文を「あぼーん」にします。
 // @match        https://bakusai.com/thr_res/*
 // @match        https://sp.bakusai.com/thr_res/*
@@ -312,6 +315,8 @@
     hideEmojiPosts();
     if (document.body) observer.observe(document.body, observeOptions);
 })();
+
+
 
 
 
