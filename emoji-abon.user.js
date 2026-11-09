@@ -2,7 +2,7 @@
 // @name         爆サイの荒らしレスをあぼーん
 // @namespace    http://tampermonkey.net/
 // @author       xigfu
-// @version      1.27
+// @version      1.28
 // @updateURL    https://xigfu.github.io/bakusai-abon/emoji-abon.user.js
 // @downloadURL  https://xigfu.github.io/bakusai-abon/emoji-abon.user.js
 // @description  指定したタイトルのスレッドで、絵文字や設定した言葉・顔文字・記号を含む本文を「あぼーん」にします。
@@ -284,11 +284,27 @@
             if ((hideEmoji && (hasImageEmoji || emojiRegex.test(text))) ||
                 exactTerms.some(term => text.includes(term)) ||
                 wordTerms.some(term => normalizedText.includes(term))) {
-                const span = document.createElement('span');
-                span.style.color = '#888888';
-                span.textContent = 'あぼーん';
-                el.replaceChildren(span);
-                checked.set(el, JSON.stringify(['あぼーん', false]));
+                // 元のノードを保持し、リンクや改行もそのまま一時表示する。
+                const originalNodes = [...el.childNodes];
+                const toggle = makeButton('あぼーん', 'all:initial !important;display:inline-block !important;color:#777 !important;background:transparent !important;border:0 !important;padding:4px 0 !important;font:inherit !important;text-decoration:underline !important;cursor:pointer !important;');
+                let revealed = false;
+                toggle.setAttribute('aria-expanded', 'false');
+                toggle.title = '押すと本文を一時表示します';
+                const remember = () => checked.set(el, JSON.stringify([
+                    el.textContent, el.querySelector(imageEmojiSelector) !== null
+                ]));
+                toggle.addEventListener('click', () => {
+                    revealed = !revealed;
+                    toggle.textContent = revealed ? '本文を隠す' : 'あぼーん';
+                    toggle.setAttribute('aria-expanded', String(revealed));
+                    toggle.title = revealed ? '押すと本文を隠します' : '押すと本文を一時表示します';
+                    el.replaceChildren(toggle, ...(revealed ? originalNodes : []));
+                    if (revealed) toggle.after(document.createElement('br'));
+                    // 自分で表示した本文を監視処理が再び隠さないようにする。
+                    remember();
+                });
+                el.replaceChildren(toggle);
+                remember();
             } else {
                 checked.set(el, signature);
             }
