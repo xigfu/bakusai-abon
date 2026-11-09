@@ -2,7 +2,7 @@
 // @name         爆サイの荒らしレスをあぼーん
 // @namespace    http://tampermonkey.net/
 // @author       xigfu
-// @version      1.28
+// @version      1.30
 // @updateURL    https://xigfu.github.io/bakusai-abon/emoji-abon.user.js
 // @downloadURL  https://xigfu.github.io/bakusai-abon/emoji-abon.user.js
 // @description  指定したタイトルのスレッドで、絵文字や設定した言葉・顔文字・記号を含む本文を「あぼーん」にします。
@@ -27,7 +27,7 @@
     const keys = ['titles', 'words', 'faces', 'symbols'];
     const clean = value => Array.isArray(value)
         ? [...new Set(value.filter(x => typeof x === 'string').map(x => x.trim()).filter(Boolean))] : [];
-    const normalize = item => ({...Object.fromEntries(keys.map(key => [key, clean(item?.[key])])), emoji: item?.emoji !== false});
+    const normalize = item => ({...Object.fromEntries(keys.map(key => [key, clean(item?.[key])])), emoji: item?.emoji !== false, blank: item?.blank === true});
     const profiles = Array.isArray(stored.profiles)
         ? stored.profiles.map(normalize)
         : [normalize(defaults)];
@@ -95,6 +95,22 @@
         const emojiHelp = document.createElement('p');
         emojiHelp.textContent = '選択中の設定に適用します。OFFでも、登録した言葉・顔文字・記号による判定は続きます。複数の設定に一致した場合、1つでもONなら絵文字を隠します。';
         dialog.append(emojiHelp);
+        const displayLabel = document.createElement('label');
+        displayLabel.textContent = '非表示にした本文の表示方法';
+        const displayInput = document.createElement('select');
+        displayInput.style.cssText = chooser.style.cssText;
+        for (const [value, text] of [['label', 'あぼーん（初期設定）'], ['blank', '空白（文字を表示しない）']]) {
+            const option = document.createElement('option');
+            option.value = value;
+            option.textContent = text;
+            displayInput.append(option);
+        }
+        displayInput.value = settings.blank ? 'blank' : 'label';
+        displayLabel.append(displayInput);
+        dialog.append(displayLabel);
+        const displayHelp = document.createElement('p');
+        displayHelp.textContent = '空白では本文を一時表示できません。投稿番号や日時は残ります。複数のスレッド設定が一致した場合は、すべてが「空白」のときだけ空白になります。';
+        dialog.append(displayHelp);
         const inputs = {};
         const titleLabel = document.createElement('label');
         titleLabel.textContent = '対象スレッドのタイトル（1行に1つ）';
@@ -136,6 +152,7 @@
             drafts[selected] = Object.fromEntries(keys.map(key => [key,
                 parseLines(inputs[key].value)]));
             drafts[selected].emoji = emojiInput.checked;
+            drafts[selected].blank = displayInput.value === 'blank';
         }
         function refreshChooser() {
             chooser.replaceChildren();
@@ -149,6 +166,7 @@
         }
         function showSelected() {
             emojiInput.checked = drafts[selected].emoji;
+            displayInput.value = drafts[selected].blank ? 'blank' : 'label';
             for (const key of keys) inputs[key].value = drafts[selected][key].join('\n');
             report.replaceChildren();
             refreshChooser();
@@ -265,6 +283,7 @@
         document.title.includes(title) || heading.includes(title)));
     if (!active.length) return;
     const hideEmoji = active.some(profile => profile.emoji);
+    const blankDisplay = active.every(profile => profile.blank);
     const wordTerms = [...new Set(active.flatMap(profile => profile.words).map(normalizeWord))];
     const exactTerms = [...new Set(active.flatMap(profile => [...profile.faces, ...profile.symbols]))];
     const checked = new WeakMap();
@@ -284,9 +303,15 @@
             if ((hideEmoji && (hasImageEmoji || emojiRegex.test(text))) ||
                 exactTerms.some(term => text.includes(term)) ||
                 wordTerms.some(term => normalizedText.includes(term))) {
+                if (blankDisplay) {
+                    el.replaceChildren();
+                    checked.set(el, JSON.stringify(['', false]));
+                    return;
+                }
                 // 元のノードを保持し、リンクや改行もそのまま一時表示する。
                 const originalNodes = [...el.childNodes];
                 const toggle = makeButton('あぼーん', 'all:initial !important;display:inline-block !important;color:#777 !important;background:transparent !important;border:0 !important;padding:4px 0 !important;font:inherit !important;text-decoration:underline !important;cursor:pointer !important;');
+                toggle.setAttribute('aria-label', '隠した本文を一時表示');
                 let revealed = false;
                 toggle.setAttribute('aria-expanded', 'false');
                 toggle.title = '押すと本文を一時表示します';
@@ -296,6 +321,7 @@
                 toggle.addEventListener('click', () => {
                     revealed = !revealed;
                     toggle.textContent = revealed ? '本文を隠す' : 'あぼーん';
+                    toggle.setAttribute('aria-label', revealed ? '本文を隠す' : '隠した本文を一時表示');
                     toggle.setAttribute('aria-expanded', String(revealed));
                     toggle.title = revealed ? '押すと本文を隠します' : '押すと本文を一時表示します';
                     el.replaceChildren(toggle, ...(revealed ? originalNodes : []));
