@@ -2,7 +2,7 @@
 // @name         爆サイの荒らしレスをあぼーん
 // @namespace    http://tampermonkey.net/
 // @author       xigfu
-// @version      1.31
+// @version      1.32
 // @homepageURL  https://xigfu.github.io/bakusai-abon/
 // @source       https://github.com/xigfu/bakusai-abon
 // @supportURL   https://xigfu.github.io/bakusai-abon/#help
@@ -21,7 +21,7 @@
     'use strict';
     const defaults = {
         titles: ['大番会館 新宿店'],
-        words: ['朱なみ', 'アカナミ'],
+        words: ['朱なみ', 'アカナミ', '戌'],
         faces: ['(*^-^)', '(・・?'],
         symbols: ['♪']
     };
@@ -261,7 +261,7 @@
         dialog.addEventListener('close', () => dialog.remove());
         const reset = makeButton('保存設定を削除して初期状態に戻す', 'display:block;font:inherit;padding:12px;margin:18px 6px 6px;');
         reset.addEventListener('click', () => {
-            if (!confirm('すべてのスレッドの保存設定と、保存前の入力内容を破棄して、初期設定に戻しますか？\n絵文字の自動判定：ON\n対象タイトル：大番会館 新宿店\n禁止ワード：朱なみ、アカナミ\n顔文字：(*^-^)、(・・?\n記号：♪\nこの操作は取り消せません。ページを読み直します。')) return;
+            if (!confirm('すべてのスレッドの保存設定と、保存前の入力内容を破棄して、初期設定に戻しますか？\n絵文字の自動判定：ON\n対象タイトル：大番会館 新宿店\n禁止ワード：朱なみ、アカナミ、戌\n顔文字：(*^-^)、(・・?\n記号：♪\nこの操作は取り消せません。ページを読み直します。')) return;
             GM_deleteValue(storageKey);
             location.reload();
         });
