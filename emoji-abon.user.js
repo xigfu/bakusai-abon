@@ -2,7 +2,7 @@
 // @name         爆サイの荒らしレスをあぼーん
 // @namespace    http://tampermonkey.net/
 // @author       xigfu
-// @version      1.33
+// @version      1.34
 // @homepageURL  https://xigfu.github.io/bakusai-abon/
 // @source       https://github.com/xigfu/bakusai-abon
 // @supportURL   https://xigfu.github.io/bakusai-abon/#help
@@ -136,18 +136,18 @@
             const toggleLabel = emojiLabel.cloneNode(true);
             const toggle = toggleLabel.querySelector('input');
             toggle.checked = settings.enabled[key];
-            toggleLabel.querySelector('span').textContent = labelText + 'で判定する';
+            const caption = toggleLabel.querySelector('span');
+            caption.textContent = labelText;
+            caption.id = 'abon-category-' + key;
+            toggle.setAttribute('aria-label', labelText + 'の判定');
             dialog.append(toggleLabel);
             categoryInputs[key] = toggle;
-            const label = document.createElement('label');
-            label.textContent = labelText;
-            label.style.display = 'block';
             const input = document.createElement('textarea');
             input.rows = 3;
             input.style.cssText = inputStyle;
             input.value = settings[key].join('\n');
-            label.append(input);
-            dialog.append(label);
+            input.setAttribute('aria-labelledby', caption.id);
+            dialog.append(input);
             addExpandButton(dialog, input);
             inputs[key] = input;
         }
@@ -272,7 +272,7 @@
         dialog.addEventListener('close', () => dialog.remove());
         const reset = makeButton('保存設定を削除して初期状態に戻す', 'display:block;font:inherit;padding:12px;margin:18px 6px 6px;');
         reset.addEventListener('click', () => {
-            if (!confirm('すべてのスレッドの保存設定と、保存前の入力内容を破棄して、初期設定に戻しますか？\n絵文字の自動判定：ON\n対象タイトル：大番会館 新宿店\n禁止ワード：朱なみ、アカナミ、戌\n顔文字：(*^-^)、(・・?\n記号：♪\nこの操作は取り消せません。ページを読み直します。')) return;
+            if (!confirm('すべてのスレッドの保存設定と、保存前の入力内容を破棄して、初期設定に戻しますか？\n絵文字の自動判定：ON\n対象タイトル：大番会館 新宿店\n禁止ワード・顔文字・記号の判定：すべてON\n禁止ワード：朱なみ、アカナミ、戌\n顔文字：(*^-^)、(・・?\n記号：♪\nこの操作は取り消せません。ページを読み直します。')) return;
             GM_deleteValue(storageKey);
             location.reload();
         });
