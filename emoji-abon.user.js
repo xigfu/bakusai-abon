@@ -2,7 +2,7 @@
 // @name         爆サイの荒らしレスをあぼーん
 // @namespace    http://tampermonkey.net/
 // @author       xigfu
-// @version      1.32
+// @version      1.33
 // @homepageURL  https://xigfu.github.io/bakusai-abon/
 // @source       https://github.com/xigfu/bakusai-abon
 // @supportURL   https://xigfu.github.io/bakusai-abon/#help
@@ -27,10 +27,13 @@
     };
     const storageKey = 'abon-settings-v1';
     const stored = GM_getValue(storageKey, {}) || {};
-    const keys = ['titles', 'words', 'faces', 'symbols'];
+    const categories = [['words', '禁止ワード'], ['faces', '顔文字'], ['symbols', '記号']];
+    const keys = ['titles', ...categories.map(([key]) => key)];
     const clean = value => Array.isArray(value)
         ? [...new Set(value.filter(x => typeof x === 'string').map(x => x.trim()).filter(Boolean))] : [];
-    const normalize = item => ({...Object.fromEntries(keys.map(key => [key, clean(item?.[key])])), emoji: item?.emoji !== false, blank: item?.blank === true});
+    const normalize = item => ({...Object.fromEntries(keys.map(key => [key, clean(item?.[key])])), emoji: item?.emoji !== false, blank: item?.blank === true,
+        enabled: Object.fromEntries(categories.map(([key]) => [key, item?.enabled?.[key] !== false]))
+    });
     const profiles = Array.isArray(stored.profiles)
         ? stored.profiles.map(normalize)
         : [normalize(defaults)];
@@ -39,7 +42,6 @@
         .replace(/[\uFF66-\uFF9F]+/g, part => part.normalize('NFKC'))
         .replace(/[A-Z]/g, letter => letter.toLowerCase());
     const emojiRegex = /\p{Extended_Pictographic}|\p{Emoji_Presentation}/u;
-    const categories = [['words', '禁止ワード'], ['faces', '顔文字'], ['symbols', '記号']];
     const inputStyle = 'box-sizing:border-box !important;display:block !important;width:100% !important;min-height:110px !important;height:auto !important;font:18px/1.5 sans-serif !important;margin:8px 0 16px !important;padding:10px !important;color:#222 !important;background:#fff !important;border:2px solid #737d8c !important;border-radius:6px !important;opacity:1 !important;visibility:visible !important;overflow:auto !important;resize:vertical !important;';
     function makeButton(text, style = 'font:inherit;padding:12px;margin:6px;') {
         const button = document.createElement('button');
@@ -96,7 +98,7 @@
         emojiLabel.append(emojiInput, emojiText);
         dialog.append(emojiLabel);
         const emojiHelp = document.createElement('p');
-        emojiHelp.textContent = '選択中の設定に適用します。OFFでも、登録した言葉・顔文字・記号による判定は続きます。複数の設定に一致した場合、1つでもONなら絵文字を隠します。';
+        emojiHelp.textContent = '選択中の設定に適用します。禁止ワード・顔文字・記号は、それぞれのチェックで切り替えられます。複数の設定に一致した場合、1つでもONなら絵文字を隠します。';
         dialog.append(emojiHelp);
         const displayLabel = document.createElement('label');
         displayLabel.textContent = '非表示にした本文の表示方法';
@@ -115,6 +117,7 @@
         displayHelp.textContent = '空白では本文を一時表示できません。投稿番号や日時は残ります。複数のスレッド設定が一致した場合は、すべてが「空白」のときだけ空白になります。';
         dialog.append(displayHelp);
         const inputs = {};
+        const categoryInputs = {};
         const titleLabel = document.createElement('label');
         titleLabel.textContent = '対象スレッドのタイトル（1行に1つ）';
         titleLabel.style.display = 'block';
@@ -130,6 +133,12 @@
         titleHelp.textContent = 'タイトルまたは見出しに、指定した言葉のどれかを含むスレッドが対象です。この設定を空欄にすると、この設定は適用されません。複数の設定に一致した場合はルールを合わせて使います。対象外のスレッドでも、この設定画面は開けます。';
         dialog.append(titleHelp);
         for (const [key, labelText] of categories) {
+            const toggleLabel = emojiLabel.cloneNode(true);
+            const toggle = toggleLabel.querySelector('input');
+            toggle.checked = settings.enabled[key];
+            toggleLabel.querySelector('span').textContent = labelText + 'で判定する';
+            dialog.append(toggleLabel);
+            categoryInputs[key] = toggle;
             const label = document.createElement('label');
             label.textContent = labelText;
             label.style.display = 'block';
@@ -155,6 +164,7 @@
             drafts[selected] = Object.fromEntries(keys.map(key => [key,
                 parseLines(inputs[key].value)]));
             drafts[selected].emoji = emojiInput.checked;
+            drafts[selected].enabled = Object.fromEntries(categories.map(([key]) => [key, categoryInputs[key].checked]));
             drafts[selected].blank = displayInput.value === 'blank';
         }
         function refreshChooser() {
@@ -169,6 +179,7 @@
         }
         function showSelected() {
             emojiInput.checked = drafts[selected].emoji;
+            for (const [key] of categories) categoryInputs[key].checked = drafts[selected].enabled[key];
             displayInput.value = drafts[selected].blank ? 'blank' : 'label';
             for (const key of keys) inputs[key].value = drafts[selected][key].join('\n');
             report.replaceChildren();
@@ -287,8 +298,8 @@
     if (!active.length) return;
     const hideEmoji = active.some(profile => profile.emoji);
     const blankDisplay = active.every(profile => profile.blank);
-    const wordTerms = [...new Set(active.flatMap(profile => profile.words).map(normalizeWord))];
-    const exactTerms = [...new Set(active.flatMap(profile => [...profile.faces, ...profile.symbols]))];
+    const wordTerms = [...new Set(active.filter(profile => profile.enabled.words).flatMap(profile => profile.words).map(normalizeWord))];
+    const exactTerms = [...new Set(active.flatMap(profile => ['faces', 'symbols'].flatMap(key => profile.enabled[key] ? profile[key] : [])))];
     const checked = new WeakMap();
     // 実際のレス本文だけを対象にする。スレッド説明・前スレ案内・操作欄は含めない。
     const bodySelector = '.res_list_article[id^="res"] .resbody[itemprop="commentText"], li.res_block[id^="res"] article .res_body[itemprop="commentText"]';
