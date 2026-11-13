@@ -2,7 +2,7 @@
 <html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>爆サイの投稿を「あぼーん」にする手順</title>
 <style>[hidden]{display:none !important}body{margin:0;background:#f4f6fa;color:#172333;font:18px/1.85 system-ui,sans-serif}main{max-width:680px;margin:auto;padding:24px 18px 64px}h1{font-size:29px;line-height:1.5}h2{font-size:23px;line-height:1.5}section{background:white;border:1px solid #dce2ea;border-radius:16px;padding:20px;margin:22px 0}a{color:#064fba}a.button{display:block;background:#1159b5;color:white;text-align:center;text-decoration:none;padding:16px;border-radius:10px;font-weight:bold;margin:16px 0}li{margin:14px 0}ol{padding-left:26px}.note{border-left:4px solid #bb7a19;padding-left:14px}summary{cursor:pointer;font-weight:bold;padding:12px 0}nav a{display:block;margin:12px 0}small{font-size:15px}code{overflow-wrap:anywhere}button{font:inherit;padding:12px;background:white;border:2px solid #1159b5;color:#064fba;border-radius:8px;width:100%}</style>
 <main><h1>爆サイの投稿を「あぼーん」にする手順</h1>
-<p id="guide-version" style="font-size:14px;color:#596575;margin-top:-8px;">案内ページ v1.34.2（2026年11月13日 01:30更新・日本時間）｜ 対応スクリプト v1.34</p>
+<p id="guide-version" style="font-size:14px;color:#596575;margin-top:-8px;">案内ページ v1.34.3（2026年11月13日 09:04更新・日本時間）｜ 対応スクリプト v1.34</p>
 <p>使う端末とブラウザを選んでください。プログラムを書く作業は必要ありません。</p>
 <p>配布ページやスクリプトは、案内とは別の作業用タブで開きます。作業用タブを閉じずに残すと、次のボタンも同じタブを使います。各操作が終わったら、この案内のタブへ戻ってください。Tampermonkeyやブラウザの動作により、別のタブや確認画面が追加で開く場合もあります。</p><label for="browser-choice"><strong>使うブラウザ</strong></label>
 <select id="browser-choice" style="display:block;width:100%;font:inherit;padding:12px;margin:12px 0"><option value="android" selected>Android版Firefox</option><option value="chrome">PC版Chrome（Windowsで動作確認済み、macOSは未確認）</option><option value="firefox">PC版Firefox（Windowsで動作確認済み、macOSは未確認）</option></select>
@@ -63,7 +63,7 @@
 <h3>保存設定を削除して初期状態に戻す</h3><p><strong>選択中の設定だけでなく、すべてのスレッド設定を初期化します。</strong>確認画面で了承すると、保存データと未保存の入力を破棄し、初期設定でページを読み直します。操作は取り消せません。このボタンでは、通常の保存ボタンを押す必要はありません。</p>
 </section><section id="samples"><h2>登録する言葉のサンプル</h2>
 <p>必要なものだけ選んで使ってください。<strong>普通の投稿も、登録した文字を含むだけで非表示になります。</strong>特に短い語や記号は広く一致します。各一覧は編集できるので、不要な行を消してからコピーできます。ここで編集してもスクリプトの設定は変わりません。</p>
-<ol><li>使いたい分類を開き、不要な行を削除します。</li><li>「コピー」を押します。</li><li>掲示板のタブへ戻り、「あぼーん設定」で対象のスレッド設定を選びます。</li><li>同じ分類の入力欄へ貼り付けます。既存の登録を残す場合は、欄の末尾で改行してから貼り付けてください。</li><li>「保存してページを読み直す」を押します。</li></ol><details><summary>禁止ワードのサンプル（114個）</summary><label for="sample-words">必要に応じて行を削除できます</label><textarea id="sample-words" rows="8" spellcheck="false" style="box-sizing:border-box;width:100%;font:18px/1.6 sans-serif;margin:12px 0;">洗浄
+<ol><li>使いたい分類を開き、不要な行を削除します。</li><li>「コピー」を押します。</li><li>掲示板のタブへ戻り、「あぼーん設定」で対象のスレッド設定を選びます。</li><li>同じ分類の入力欄へ貼り付けます。既存の登録を残す場合は、欄の末尾で改行してから貼り付けてください。</li><li>「保存してページを読み直す」を押します。</li></ol><details><summary>禁止ワードのサンプル（116個）</summary><label for="sample-words">必要に応じて行を削除できます</label><textarea id="sample-words" rows="8" spellcheck="false" style="box-sizing:border-box;width:100%;font:18px/1.6 sans-serif;margin:12px 0;">洗浄
 釘
 場内
 番台
@@ -169,6 +169,7 @@ Pマン
 歌
 家賃
 英文学
+真理
 残された時間
 月日
 人生
@@ -176,7 +177,8 @@ Pマン
 自己
 教育
 先生
-乙女</textarea><button type="button" data-sample-copy="words">禁止ワードのサンプルをコピー</button><p id="sample-status-words" role="status"></p></details><details><summary>顔文字のサンプル（15個）</summary><label for="sample-faces">必要に応じて行を削除できます</label><textarea id="sample-faces" rows="8" spellcheck="false" style="box-sizing:border-box;width:100%;font:18px/1.6 sans-serif;margin:12px 0;">(*^-^)
+乙女
+お黙り</textarea><button type="button" data-sample-copy="words">禁止ワードのサンプルをコピー</button><p id="sample-status-words" role="status"></p></details><details><summary>顔文字のサンプル（15個）</summary><label for="sample-faces">必要に応じて行を削除できます</label><textarea id="sample-faces" rows="8" spellcheck="false" style="box-sizing:border-box;width:100%;font:18px/1.6 sans-serif;margin:12px 0;">(*^-^)
 (・・?
 m(__)m
 (T＿T)
