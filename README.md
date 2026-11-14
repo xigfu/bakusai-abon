@@ -16,7 +16,7 @@ Androidスマホでは **Firefox**、iPhoneでは **Safari** で案内ページ�
 - Windows版 Firefox ＋ Tampermonkey
 - Android版 Firefox ＋ Tampermonkey
 
-- iPhone SE（第3世代）の Safari ＋ Userscripts
+- iPhoneのSafari ＋ Userscripts
 
 macOSでは動作未確認です。
 
@@ -49,7 +49,7 @@ macOSでは動作未確認です。
 ## ファイル
 
 - `index.html`：導入手順、設定方法、登録サンプルの案内ページ
-- `emoji-abon.user.js`：PC・Android向けのTampermonkey版 v1.34
-- `emoji-abon-ios.user.js`：iPhone向けのSafari・Userscripts版 v1.34.2
+- `emoji-abon.user.js`：PC・Android向けのTampermonkey版
+- `emoji-abon-ios.user.js`：iPhone向けのSafari・Userscripts版
 
 爆サイ、Tampermonkey、Userscriptsの公式配布物ではありません。掲示板やブラウザの仕様変更により、動作しなくなる場合があります。
