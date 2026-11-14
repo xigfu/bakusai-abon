@@ -2,7 +2,7 @@
 <html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>爆サイの投稿を「あぼーん」にする手順</title>
 <style>[hidden]{display:none !important}body{margin:0;background:#f4f6fa;color:#172333;font:18px/1.85 system-ui,sans-serif}main{max-width:680px;margin:auto;padding:24px 18px 64px}h1{font-size:29px;line-height:1.5}h2{font-size:23px;line-height:1.5}section{background:white;border:1px solid #dce2ea;border-radius:16px;padding:20px;margin:22px 0}a{color:#064fba}a.button{display:block;background:#1159b5;color:white;text-align:center;text-decoration:none;padding:16px;border-radius:10px;font-weight:bold;margin:16px 0}li{margin:14px 0}ol{padding-left:26px}.note{border-left:4px solid #bb7a19;padding-left:14px}summary{cursor:pointer;font-weight:bold;padding:12px 0}nav a{display:block;margin:12px 0}small{font-size:15px}code{overflow-wrap:anywhere}button{font:inherit;padding:12px;background:white;border:2px solid #1159b5;color:#064fba;border-radius:8px;width:100%}</style>
 <main><h1>爆サイの投稿を「あぼーん」にする手順</h1>
-<p id="guide-version" style="font-size:14px;color:#596575;margin-top:-8px;">案内ページ v1.34.13（2026年11月14日 19:19更新・日本時間）｜ PC・Android版 v1.34 ｜ iPhone版 v1.34.2</p>
+<p id="guide-version" style="font-size:14px;color:#596575;margin-top:-8px;">案内ページ v1.34.15（2026年11月14日 19:32更新・日本時間）｜ PC・Android版 v1.34 ｜ iPhone版 v1.34.2</p>
 <p>使う端末とブラウザを選んでください。プログラムを書く作業は必要ありません。</p>
 <p>配布ページやスクリプトは、案内とは別の作業用タブで開きます。作業用タブを閉じずに残すと、次のボタンも同じタブを使います。各操作が終わったら、この案内のタブへ戻ってください。Tampermonkeyやブラウザの動作により、別のタブや確認画面が追加で開く場合もあります。</p><label for="browser-choice"><strong>使うブラウザ</strong></label>
 <select id="browser-choice" style="display:block;width:100%;font:inherit;padding:12px;margin:12px 0"><option value="android" selected>Android版Firefox</option><option value="ios">iPhoneのSafari</option><option value="chrome">PC版Chrome（Windowsで動作確認済み、macOSは未確認）</option><option value="firefox">PC版Firefox（Windowsで動作確認済み、macOSは未確認）</option></select>
@@ -42,12 +42,15 @@
 <section><h2 id="verify-heading">4．掲示板を開いて確認</h2><ol id="ios-verify" hidden><li>Safariで「大番会館 新宿店」のスレッドを開きます。</li><li>ページメニューから「Userscripts」を開き、爆サイへのアクセス許可を求められたら許可します。iPhone版が有効になっていることを確認して閉じ、スレッドを再読み込みします。</li><li>絵文字を含む投稿の本文が「あぼーん」になり、右上の青い「あぼーん設定」を押すと設定画面が開けば完了です。</li></ol><div id="ios-verify-help" hidden><details><summary>追加後に「あぼーん設定」が出ない場合</summary><p>爆サイの対象スレッドでUserscriptsを開き、左上のフォルダのアイコンを押して全スクリプトの一覧を表示します。「爆サイの荒らしレスをあぼーん iPhone版」が入っていて有効か、爆サイへのアクセスが許可されているかを確認し、スレッドを再読み込みします。</p></details></div><ol id="standard-verify"><li><strong>選んだブラウザで</strong>いつもの「大番会館 新宿店」のスレッドを開きます。</li><li>すでに開いていた場合は、ページを再読み込みします。</li><li>絵文字を含む投稿の本文が「あぼーん」になれば完了です。</li></ol><p>絵文字がなくても、設定した言葉・顔文字・記号を含む本文は非表示になります。投稿を1件だけ表示するページでは、このスクリプトは動きません。スレッドの一覧形式のページで確認してください。</p><p>「あぼーん」をクリック／タップすると、その本文だけを一時表示できます。「本文を隠す」を押すと再び隠れます。ページを読み直すと、再び「あぼーん」に戻ります。保存した設定は変わりません。</p></section>
 <section id="add-rules">
 <h2>言葉・顔文字・記号を追加する</h2>
-<p>表示したくない投稿に含まれる絵文字や言葉、顔文字、記号（顔文字のパーツなど）は、「あぼーん設定」を開いて追加できます。</p>
+<div id="standard-add-intro"><p>表示したくない投稿に含まれる絵文字や言葉、顔文字、記号（顔文字のパーツなど）は、「あぼーん設定」を開いて追加できます。</p>
 <h3>手順1 あぼーん設定を開く</h3>
 <p>スクリプトを入れたブラウザで爆サイのスレッドを開き、次のどちらかで設定画面を開きます。</p>
 <details open><summary>ボタンから開く方法</summary><p>画面右上の青い<strong>「あぼーん設定」</strong>を押します。対象に登録していないスレッドでも開けます。</p></details>
 <details><summary>Android・PCでメニューから開く方法</summary><p><strong>Android版Firefox：</strong>「⋮」→「拡張機能」を開き、Tampermonkeyの行を押します。「一部のURLはブラウザ…」と表示される場合もあります。右の歯車ではなく、アイコンと文字がある部分を押してください。</p><p><strong>PC版Chrome・Firefox：</strong>ブラウザの拡張機能メニューからTampermonkeyを開きます。</p><p>続いて<strong>「あぼーんの設定（言葉・顔文字・記号）」</strong>を押します。項目が見当たらない場合は、ページ上の青いボタンを使ってください。</p></details>
 <h3>手順2 登録する内容を入力して保存する</h3>
+</div>
+<div id="ios-add-intro" hidden><p>表示したくない投稿に含まれる絵文字や言葉、顔文字、記号（顔文字のパーツなど）は、「あぼーん設定」を開いて追加できます。「あぼーん設定」は、画面右上に表示されている「あぼーん設定」ボタンを押すと開きます。</p>
+<h3>登録する内容を入力して保存する</h3></div>
 <ol><li>「編集するスレッド設定」で、変更したい設定を選びます。</li><li>「禁止ワード」「顔文字」「記号」の該当する欄に、<strong>1行に1個ずつ</strong>入力します。登録を残して追加する場合は、末尾で改行してから入力します。削除するときは、その行を消します。</li><li>判定に使う項目は、名前の左にあるチェックを入れます。一時的に判定を止めるにはチェックを外します。入力した内容は残ります。</li><li><strong>「保存してページを読み直す」</strong>を押します。ページが読み直され、変更した条件で判定します。</li></ol>
 <p>入力例は<a href="#samples">登録する言葉のサンプル</a>からコピーできます。各項目の操作は、次の<a href="#settings-reference">「あぼーん設定」の設定項目</a>で説明します。</p>
 <h3>初期設定</h3>
@@ -221,17 +224,28 @@ m(__)m
 ω
 ♡
 ✿
-◍</textarea><button type="button" data-sample-copy="symbols">記号のサンプルをコピー</button><p id="sample-status-symbols" role="status"></p></details><p>「❤」はサンプルに含めていません。絵文字の自動判定がONなら自動で非表示になります。OFFの場合は「❤」だけでは隠れません。「♡」「✿」「◍」は記号のサンプルに入れています。</p></section><section id="help"><h2>うまくいかないとき</h2><p>Tampermonkeyの「バグを報告」からも、この説明が開きます。現在、不具合報告の受付窓口は設けていません。まずは以下の対処方法を確認してください。</p>
+◍</textarea><button type="button" data-sample-copy="symbols">記号のサンプルをコピー</button><p id="sample-status-symbols" role="status"></p></details><p>「❤」はサンプルに含めていません。絵文字の自動判定がONなら自動で非表示になります。OFFの場合は「❤」だけでは隠れません。「♡」「✿」「◍」は記号のサンプルに入れています。</p></section><section id="help"><h2>うまくいかないとき</h2><div id="standard-help"><p>Tampermonkeyの「バグを報告」からも、この説明が開きます。現在、不具合報告の受付窓口は設けていません。まずは以下の対処方法を確認してください。</p>
 <details><summary>AndroidでリンクがChromeやGoogleで開く</summary><p>Firefoxを開いて、この案内ページのアドレスをFirefoxのアドレス欄に貼り付けてください。下のボタンでコピーできます。</p><button id="copy" type="button">この案内のアドレスをコピー</button><p id="copy-result" role="status"></p></details>
 <details><summary>英語や記号がたくさん出た／ファイルが保存された</summary><p>プログラムの中身がそのまま表示されています。コピーして貼り付ける必要はありません。選んだブラウザで開いているか、Tampermonkeyが追加済みで有効か確認してください。PC版Chromeでは「ユーザースクリプトを許可」も確認します。その後、この案内のタブへ戻り「3」のボタンをもう一度押します。解決しなければ、そこで操作を止めてください。</p></details>
-<details><summary>追加したのに表示が変わらない</summary><p>iPhoneでは、SafariのページメニューからUserscriptsを開き、爆サイへのアクセスが許可されていてiPhone版が有効か確認します。その後、スレッドを再読み込みします。</p><p>選んだブラウザの通常のタブで見ているか確認してください。ブラウザの拡張機能メニューからTampermonkeyを開き、無効になっていないか確認します。Tampermonkeyの管理画面（ダッシュボード）でも、あぼーん用スクリプトが有効か確認してください。掲示板側の画面の作りによっては動かない場合があります。</p></details>
-<details><summary>隠した投稿を元に戻したい</summary><p>ブラウザの拡張機能の管理画面でTampermonkeyを無効にして、掲示板を再読み込みしてください。他にもTampermonkeyのスクリプトを使っている場合は、Tampermonkeyの管理画面で、この「あぼーん」スクリプトだけを無効にしてください。</p></details></section>
+<details><summary>追加したのに表示が変わらない</summary><p>選んだブラウザの通常のタブで見ているか確認してください。ブラウザの拡張機能メニューからTampermonkeyを開き、無効になっていないか確認します。Tampermonkeyの管理画面（ダッシュボード）でも、あぼーん用スクリプトが有効か確認してください。掲示板側の画面の作りによっては動かない場合があります。</p></details>
+<details><summary>隠した投稿を元に戻したい</summary><p>ブラウザの拡張機能の管理画面でTampermonkeyを無効にして、掲示板を再読み込みしてください。他にもTampermonkeyのスクリプトを使っている場合は、Tampermonkeyの管理画面で、この「あぼーん」スクリプトだけを無効にしてください。</p></details></div>
+<div id="ios-help" hidden>
+<details><summary>「Userscripts」がSafariのメニューに出ない</summary><p>iPhoneの「設定」→「アプリ」→「Safari」→「機能拡張」→「Userscripts」を開き、「機能拡張を許可」がONか確認します。</p></details>
+<details><summary>コードが表示された／インストールの案内が出ない</summary><p>コードが表示されたタブで、Safariのアドレス欄の左にあるページメニューから「Userscripts」を開きます。配布ページへのアクセスを求められたら許可し、黄色の「Tap to install」を押します。緑色の「Userscript Installed」が表示されていれば追加済みです。</p></details>
+<details><summary>追加したのに「あぼーん設定」が出ない</summary><p>Safariで爆サイのスレッドを開き、ページメニューから「Userscripts」を開きます。爆サイへのアクセスが許可されているか確認します。左上のフォルダアイコンを押し、一覧で「爆サイの荒らしレスをあぼーん iPhone版」が有効か確認してください。メニューを閉じてスレッドを再読み込みします。</p></details>
+<details><summary>隠した投稿を元に戻したい</summary><p>Safariのページメニューから「Userscripts」を開き、左上のフォルダアイコンを押します。一覧で「あぼーん」のiPhone版をオフにしてから、スレッドを再読み込みします。</p></details>
+</div>
+</section>
 <footer><small>参考：<a href="https://support.mozilla.org/ja/kb/find-and-install-add-ons-firefox-android" target="abone-guide-work">Mozilla公式の拡張機能の追加手順</a>。画面の表示は端末や更新により異なります。このページではログインや個人情報の入力は必要ありません。</small></footer></main>
 <script>
 const choice=document.getElementById('browser-choice');
 function updateBrowser(){
  const android=choice.value==='android';
  const ios=choice.value==='ios';
+ document.getElementById('ios-help').hidden=!ios;
+ document.getElementById('standard-help').hidden=ios;
+ document.getElementById('ios-add-intro').hidden=!ios;
+ document.getElementById('standard-add-intro').hidden=ios;
  const pc=!android&&!ios;
  for(const id of ['ios-setup','ios-install','ios-verify','ios-verify-help']) document.getElementById(id).hidden=!ios;
  document.getElementById('standard-verify').hidden=ios;
