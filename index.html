@@ -2,7 +2,7 @@
 <html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>爆サイの投稿を「あぼーん」にする手順</title>
 <style>[hidden]{display:none !important}body{margin:0;background:#f4f6fa;color:#172333;font:18px/1.85 system-ui,sans-serif}main{max-width:680px;margin:auto;padding:24px 18px 64px}h1{font-size:29px;line-height:1.5}h2{font-size:23px;line-height:1.5}section{background:white;border:1px solid #dce2ea;border-radius:16px;padding:20px;margin:22px 0}a{color:#064fba}a.button{display:block;background:#1159b5;color:white;text-align:center;text-decoration:none;padding:16px;border-radius:10px;font-weight:bold;margin:16px 0}li{margin:14px 0}ol{padding-left:26px}.note{border-left:4px solid #bb7a19;padding-left:14px}summary{cursor:pointer;font-weight:bold;padding:12px 0}nav a{display:block;margin:12px 0}small{font-size:15px}code{overflow-wrap:anywhere}button{font:inherit;padding:12px;background:white;border:2px solid #1159b5;color:#064fba;border-radius:8px;width:100%}</style>
 <main><h1>爆サイの投稿を「あぼーん」にする手順</h1>
-<p id="guide-version" style="font-size:14px;color:#596575;margin-top:-8px;">案内ページ v1.34.15（2026年11月14日 19:32更新・日本時間）｜ PC・Android版 v1.34 ｜ iPhone版 v1.34.2</p>
+<p id="guide-version" style="font-size:14px;color:#596575;margin-top:-8px;">案内ページ v1.34.17（2026年11月14日 19:36更新・日本時間）｜ PC・Android版 v1.34 ｜ iPhone版 v1.34.2</p>
 <p>使う端末とブラウザを選んでください。プログラムを書く作業は必要ありません。</p>
 <p>配布ページやスクリプトは、案内とは別の作業用タブで開きます。作業用タブを閉じずに残すと、次のボタンも同じタブを使います。各操作が終わったら、この案内のタブへ戻ってください。Tampermonkeyやブラウザの動作により、別のタブや確認画面が追加で開く場合もあります。</p><label for="browser-choice"><strong>使うブラウザ</strong></label>
 <select id="browser-choice" style="display:block;width:100%;font:inherit;padding:12px;margin:12px 0"><option value="android" selected>Android版Firefox</option><option value="ios">iPhoneのSafari</option><option value="chrome">PC版Chrome（Windowsで動作確認済み、macOSは未確認）</option><option value="firefox">PC版Firefox（Windowsで動作確認済み、macOSは未確認）</option></select>
@@ -236,12 +236,13 @@ m(__)m
 <details><summary>隠した投稿を元に戻したい</summary><p>Safariのページメニューから「Userscripts」を開き、左上のフォルダアイコンを押します。一覧で「あぼーん」のiPhone版をオフにしてから、スレッドを再読み込みします。</p></details>
 </div>
 </section>
-<footer><small>参考：<a href="https://support.mozilla.org/ja/kb/find-and-install-add-ons-firefox-android" target="abone-guide-work">Mozilla公式の拡張機能の追加手順</a>。画面の表示は端末や更新により異なります。このページではログインや個人情報の入力は必要ありません。</small></footer></main>
+<footer><small><span id="mozilla-reference">参考：<a href="https://support.mozilla.org/ja/kb/find-and-install-add-ons-firefox-android" target="abone-guide-work">Mozilla公式の拡張機能の追加手順</a>。</span>画面の表示は端末や更新により異なります。このページではログインや個人情報の入力は必要ありません。</small></footer></main>
 <script>
 const choice=document.getElementById('browser-choice');
 function updateBrowser(){
  const android=choice.value==='android';
  const ios=choice.value==='ios';
+ document.getElementById('mozilla-reference').hidden=!android;
  document.getElementById('ios-help').hidden=!ios;
  document.getElementById('standard-help').hidden=ios;
  document.getElementById('ios-add-intro').hidden=!ios;
