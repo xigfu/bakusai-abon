@@ -2,7 +2,7 @@
 // @name         爆サイの荒らしレスをあぼーん
 // @namespace    http://tampermonkey.net/
 // @author       xigfu
-// @version      1.37.2
+// @version      1.37.3
 // @homepageURL  https://xigfu.github.io/bakusai-abon/
 // @source       https://github.com/xigfu/bakusai-abon
 // @supportURL   https://xigfu.github.io/bakusai-abon/#help
@@ -81,6 +81,13 @@
         chooser.style.cssText = 'box-sizing:border-box !important;display:block !important;width:100% !important;max-width:100% !important;min-width:0 !important;height:54px !important;min-height:54px !important;max-height:none !important;font:18px/1.5 sans-serif !important;padding:8px 32px 8px 10px !important;margin:8px 0 16px !important;border:2px solid #737d8c !important;border-radius:6px !important;color:#222 !important;background-color:#fff !important;appearance:auto !important;text-indent:0 !important;letter-spacing:normal !important;';
         chooserLabel.append(chooser);
         dialog.append(chooserLabel);
+        const add = makeButton('新しいルールを追加', 'font:inherit;padding:10px;margin:6px;');
+        const drop = makeButton('このルールを削除', 'font:inherit;padding:10px;margin:6px;');
+        const ruleActions = document.createElement('div');
+        ruleActions.style.display = 'block';
+        ruleActions.style.marginBottom = '16px';
+        ruleActions.append(drop, add);
+        dialog.append(ruleActions);
         const inputs = {};
         const categoryInputs = {};
         const titleLabel = document.createElement('label');
@@ -97,13 +104,6 @@
         const titleHelp = document.createElement('p');
         titleHelp.textContent = '「編集するルール」で選んだルールを適用したいスレッドのタイトル、またはタイトルに含まれるワードを入力してください。指定したタイトルまたはワードのいずれかがスレッド名に含まれていれば、このルールが適用されます。空欄のまま保存すると、一覧には「タイトル未設定」と表示されます。ルールの内容は保存されますが、どのスレッドにも適用されません。同じスレッドが複数のルールの条件に一致すると、それらのルールが合わせて適用されます。';
         dialog.append(titleHelp);
-        const add = makeButton('新しいルールを追加', 'font:inherit;padding:10px;margin:6px;');
-        const drop = makeButton('このルールを削除', 'font:inherit;padding:10px;margin:6px;');
-        const ruleActions = document.createElement('div');
-        ruleActions.style.display = 'block';
-        ruleActions.style.marginBottom = '16px';
-        ruleActions.append(drop, add);
-        dialog.append(ruleActions);
         const displayLabel = document.createElement('label');
         displayLabel.textContent = '非表示にした投稿内容の表示方法';
         const displayInput = document.createElement('select');
