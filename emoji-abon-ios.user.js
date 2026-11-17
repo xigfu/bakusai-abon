@@ -2,7 +2,7 @@
 // @name         爆サイの荒らしレスをあぼーん iPhone版
 // @namespace    http://tampermonkey.net/
 // @author       xigfu
-// @version      1.36
+// @version      1.37
 // @homepageURL  https://xigfu.github.io/bakusai-abon/
 // @source       https://github.com/xigfu/bakusai-abon
 // @supportURL   https://xigfu.github.io/bakusai-abon/#help
@@ -99,10 +99,11 @@
         const drop = makeButton('このルールを削除', 'font:inherit;padding:10px;margin:6px;');
         const ruleActions = document.createElement('div');
         ruleActions.style.display = 'block';
+        ruleActions.style.marginBottom = '16px';
         ruleActions.append(drop, add);
         dialog.append(ruleActions);
         const displayLabel = document.createElement('label');
-        displayLabel.textContent = '非表示にした本文の表示方法';
+        displayLabel.textContent = '非表示にした投稿内容の表示方法';
         const displayInput = document.createElement('select');
         displayInput.style.cssText = chooser.style.cssText;
         for (const [value, text] of [['label', 'あぼーん（初期設定）'], ['blank', '空白（文字を表示しない）']]) {
@@ -117,6 +118,13 @@
         const displayHelp = document.createElement('p');
         displayHelp.textContent = '「あぼーん」を選ぶと、投稿に表示された「あぼーん」を押して本文を一時表示できます。「空白」を選ぶと、本文は一時表示できません。複数のルールが適用されるスレッドでは、適用されるルールがすべて「空白」のときだけ、隠した本文が空白になります。';
         dialog.append(displayHelp);
+        const rulesHeading = document.createElement('h3');
+        rulesHeading.textContent = 'ルールの設定';
+        const entryHelp = document.createElement('p');
+        entryHelp.textContent = '適用したい項目にチェックを入れます。「禁止ワード」「顔文字」「記号」は、1行に1つ入力してください。有効にした欄の登録内容が本文に含まれると、その投稿を非表示にします。複数のルールが適用される場合は、いずれかのルールで絵文字の自動判定がONなら絵文字を隠します。';
+        const notice = document.createElement('p');
+        notice.textContent = '「禁止ワード」はカタカナの全角・半角と英字の大文字・小文字を区別しません。ひらがなとカタカナは区別します。「顔文字」と「記号」は入力どおりに判定します。';
+        dialog.append(rulesHeading, entryHelp, notice);
         const emojiLabel = document.createElement('label');
         emojiLabel.style.cssText = 'display:block;margin:16px 0;';
         const emojiInput = document.createElement('input');
@@ -127,12 +135,6 @@
         emojiText.textContent = '絵文字を自動であぼーんする';
         emojiLabel.append(emojiInput, emojiText);
         dialog.append(emojiLabel);
-        const emojiHelp = document.createElement('p');
-        emojiHelp.textContent = '選択中の設定に適用します。禁止ワード・顔文字・記号は、それぞれのチェックで切り替えられます。複数の設定に一致した場合、1つでもONなら絵文字を隠します。';
-        dialog.append(emojiHelp);
-        const entryHelp = document.createElement('p');
-        entryHelp.textContent = '1行に1つ入力します。登録した内容が本文に含まれると、その投稿を非表示にします。';
-        dialog.append(entryHelp);
         for (const [key, labelText] of categories) {
             const toggleLabel = emojiLabel.cloneNode(true);
             const toggle = toggleLabel.querySelector('input');
@@ -152,13 +154,12 @@
             addExpandButton(dialog, input);
             inputs[key] = input;
         }
-        const notice = document.createElement('p');
-        notice.textContent = '禁止ワードはカタカナの全角・半角と英字の大文字・小文字を区別しません。ひらがなとカタカナは区別します。顔文字・記号は入力どおりに判定します。';
-        dialog.append(notice);
-        const check = document.createElement('button');
-        check.textContent = '絵文字の自動判定と重複する登録を確認';
-        check.type = 'button';
-        check.style.cssText = 'font:inherit;padding:12px;margin:6px;';
+        const checkHeading = document.createElement('h3');
+        checkHeading.textContent = '設定したルールのチェック';
+        const checkHelp = document.createElement('p');
+        checkHelp.textContent = '「禁止ワード」「顔文字」「記号」に絵文字が含まれている行と、同じ欄の中で重複している入力を確認します。';
+        const check = makeButton('ルールのチェック');
+        dialog.append(checkHeading, checkHelp);
         const report = document.createElement('div');
         report.setAttribute('aria-live', 'polite');
         function capture() {
@@ -208,60 +209,46 @@
         titleInput.addEventListener('input', () => { capture(); refreshChooser(); });
         refreshChooser();
 
-        function findRedundant() {
-            const result = [];
-            for (const [key, label] of categories) {
-                for (const term of parseLines(inputs[key].value)) {
-                    if (emojiRegex.test(term)) result.push({key, label, term});
-                }
-            }
-            return result;
-        }
         check.addEventListener('click', () => {
             report.replaceChildren();
-            if (!emojiInput.checked) {
-                const message = document.createElement('p');
-                message.textContent = 'この設定では絵文字の自動判定がOFFのため、登録の削除候補は表示しません。';
-                report.append(message);
-                return;
+            const findings = [];
+            for (const [key, label] of categories) {
+                const seen = new Map();
+                inputs[key].value.split(/\r?\n/).forEach((line, index) => {
+                    const term = line.trim();
+                    if (!term) return;
+                    const lineNumber = index + 1;
+                    const normalized = key === 'words' ? normalizeWord(term) : term;
+                    if (emojiRegex.test(term)) findings.push(label + ' ' + lineNumber + '行目（絵文字）：' + term);
+                    if (seen.has(normalized)) {
+                        findings.push(label + ' ' + lineNumber + '行目（' + seen.get(normalized) + '行目と重複）：' + term);
+                    } else {
+                        seen.set(normalized, lineNumber);
+                    }
+                });
             }
-            const matches = findRedundant();
             const message = document.createElement('p');
-            message.textContent = matches.length
-                ? matches.length + '件あります。これらを含む本文は絵文字の自動判定でも隠れるため、登録を削除しても結果は変わりません。'
-                : '絵文字の自動判定と重複する登録はありません。';
+            message.textContent = findings.length
+                ? '確認結果 ' + findings.length + '件。' + (emojiInput.checked ? '絵文字を含む本文は自動判定でも非表示になります。' : '')
+                : '絵文字を含む行や重複した入力はありません。';
             report.append(message);
-            if (!matches.length) return;
+            if (!findings.length) return;
             const list = document.createElement('ul');
-            for (const match of matches) {
+            for (const finding of findings) {
                 const item = document.createElement('li');
-                item.textContent = match.label + '：' + match.term;
+                item.textContent = finding;
                 item.style.cssText = 'white-space:pre-wrap;overflow-wrap:anywhere;';
                 list.append(item);
             }
             report.append(list);
-            const remove = makeButton('この一覧の登録を入力欄から削除', 'font:inherit;padding:12px;margin:6px;');
-            remove.addEventListener('click', () => {
-                const current = findRedundant();
-                // 確認後に入力を編集した場合は、一覧を更新してから再確認してもらう。
-                if (!emojiInput.checked || JSON.stringify(current) !== JSON.stringify(matches)) {
-                    check.click();
-                    return;
-                }
-                if (!confirm('表示された' + matches.length + '件の登録を入力欄から削除しますか？ 設定への反映は最後の保存ボタンで行います。')) return;
-                for (const key of ['words', 'faces', 'symbols']) {
-                    inputs[key].value = inputs[key].value.split(/\r?\n/)
-                        .filter(line => !emojiRegex.test(line.trim())).join('\n');
-                }
-                report.replaceChildren();
-                const done = document.createElement('p');
-                done.textContent = '入力欄から削除しました。内容を確認して「保存してページを読み直す」を押してください。キャンセルすれば保存されません。';
-                report.append(done);
-            });
-            report.append(remove);
         });
+        for (const [key] of categories) {
+            inputs[key].addEventListener('input', () => report.replaceChildren());
+        }
         emojiInput.addEventListener('change', () => report.replaceChildren());
         dialog.append(check, report);
+        const formActions = document.createElement('div');
+        formActions.style.cssText = 'display:block;margin-top:20px;';
         const save = makeButton('保存してページを読み直す', 'font:inherit;padding:12px;margin:6px;');
         let busy = false;
         save.addEventListener('click', async () => {
@@ -298,7 +285,8 @@
                 save.disabled = reset.disabled = cancel.disabled = false;
             }
         });
-        dialog.append(save, cancel, reset);
+        formActions.append(save, cancel, reset);
+        dialog.append(formActions);
         document.body.append(dialog);
         dialog.showModal();
     }
