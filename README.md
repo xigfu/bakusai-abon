@@ -49,6 +49,7 @@ macOSでは動作未確認です。
 ## ファイル
 
 - `index.html`：導入手順、設定方法、登録サンプルの案内ページ
+- `settings.html`：あぼーん設定の項目とボタンの説明ページ
 - `emoji-abon.user.js`：PC・Android向けのTampermonkey版
 - `emoji-abon-ios.user.js`：iPhone向けのSafari・Userscripts版
 

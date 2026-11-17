@@ -2,7 +2,7 @@
 // @name         爆サイの荒らしレスをあぼーん iPhone版
 // @namespace    http://tampermonkey.net/
 // @author       xigfu
-// @version      1.37.6
+// @version      1.37.7
 // @homepageURL  https://xigfu.github.io/bakusai-abon/
 // @source       https://github.com/xigfu/bakusai-abon
 // @supportURL   https://xigfu.github.io/bakusai-abon/#help
@@ -69,7 +69,7 @@
         const title = document.createElement('h2');
         title.textContent = 'あぼーんの設定';
         const settingsGuide = document.createElement('a');
-        settingsGuide.href = 'https://xigfu.github.io/bakusai-abon/#settings-reference';
+        settingsGuide.href = 'https://xigfu.github.io/bakusai-abon/settings.html';
         settingsGuide.target = '_blank';
         settingsGuide.rel = 'noopener';
         settingsGuide.textContent = '設定項目の説明を見る';
