@@ -2,7 +2,7 @@
 // @name         爆サイの荒らしレスをあぼーん iPhone版
 // @namespace    http://tampermonkey.net/
 // @author       xigfu
-// @version      1.37
+// @version      1.37.1
 // @homepageURL  https://xigfu.github.io/bakusai-abon/
 // @source       https://github.com/xigfu/bakusai-abon
 // @supportURL   https://xigfu.github.io/bakusai-abon/#help
@@ -119,6 +119,7 @@
         displayHelp.textContent = '「あぼーん」を選ぶと、投稿に表示された「あぼーん」を押して本文を一時表示できます。「空白」を選ぶと、本文は一時表示できません。複数のルールが適用されるスレッドでは、適用されるルールがすべて「空白」のときだけ、隠した本文が空白になります。';
         dialog.append(displayHelp);
         const rulesHeading = document.createElement('h3');
+        if (globalThis.matchMedia?.('(max-width: 600px)').matches) rulesHeading.style.setProperty('margin-top', '24px', 'important');
         rulesHeading.textContent = 'ルールの設定';
         const entryHelp = document.createElement('p');
         entryHelp.textContent = '適用したい項目にチェックを入れます。「禁止ワード」「顔文字」「記号」は、1行に1つ入力してください。有効にした欄の登録内容が本文に含まれると、その投稿を非表示にします。複数のルールが適用される場合は、いずれかのルールで絵文字の自動判定がONなら絵文字を隠します。';
@@ -155,6 +156,7 @@
             inputs[key] = input;
         }
         const checkHeading = document.createElement('h3');
+        if (globalThis.matchMedia?.('(max-width: 600px)').matches) checkHeading.style.setProperty('margin-top', '24px', 'important');
         checkHeading.textContent = '設定したルールのチェック';
         const checkHelp = document.createElement('p');
         checkHelp.textContent = '「禁止ワード」「顔文字」「記号」に絵文字が含まれている行と、同じ欄の中で重複している入力を確認します。';
