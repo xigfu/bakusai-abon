@@ -2,7 +2,7 @@
 // @name         爆サイの荒らしレスをあぼーん iPhone版
 // @namespace    http://tampermonkey.net/
 // @author       xigfu
-// @version      1.37.3
+// @version      1.37.5
 // @homepageURL  https://xigfu.github.io/bakusai-abon/
 // @source       https://github.com/xigfu/bakusai-abon
 // @supportURL   https://xigfu.github.io/bakusai-abon/#help
@@ -68,7 +68,13 @@
         dialog.style.cssText = 'box-sizing:border-box;width:94%;max-width:540px;max-height:85vh;overflow:auto;padding:20px;border:2px solid #555;border-radius:12px;background:#fff;color:#222;font:18px/1.6 sans-serif;';
         const title = document.createElement('h2');
         title.textContent = 'あぼーんの設定';
-        dialog.append(title);
+        const settingsGuide = document.createElement('a');
+        settingsGuide.href = 'https://xigfu.github.io/bakusai-abon/#settings-reference';
+        settingsGuide.target = '_blank';
+        settingsGuide.rel = 'noopener';
+        settingsGuide.textContent = '設定項目の説明を見る';
+        settingsGuide.style.cssText = 'display:block;margin:0 0 16px;color:#1259a8;text-decoration:underline;';
+        dialog.append(title, settingsGuide);
         const drafts = profiles.map(normalize);
         if (!drafts.length) drafts.push(normalize({}));
         let selected = 0;
@@ -99,9 +105,6 @@
         dialog.append(titleLabel);
         addExpandButton(dialog, titleInput);
         inputs.titles = titleInput;
-        const titleHelp = document.createElement('p');
-        titleHelp.textContent = '「編集するルール」で選んだルールを適用したいスレッドのタイトル、またはタイトルに含まれるワードを入力してください。指定したタイトルまたはワードのいずれかがスレッド名に含まれていれば、このルールが適用されます。空欄のまま保存すると、一覧には「タイトル未設定」と表示されます。ルールの内容は保存されますが、どのスレッドにも適用されません。同じスレッドが複数のルールの条件に一致すると、それらのルールが合わせて適用されます。';
-        dialog.append(titleHelp);
         const displayLabel = document.createElement('label');
         displayLabel.textContent = '非表示にした投稿内容の表示方法';
         const displayInput = document.createElement('select');
@@ -115,17 +118,12 @@
         displayInput.value = settings.blank ? 'blank' : 'label';
         displayLabel.append(displayInput);
         dialog.append(displayLabel);
-        const displayHelp = document.createElement('p');
-        displayHelp.textContent = '「あぼーん」を選ぶと、投稿に表示された「あぼーん」を押して本文を一時表示できます。「空白」を選ぶと、本文は一時表示できません。複数のルールが適用されるスレッドでは、適用されるルールがすべて「空白」のときだけ、隠した本文が空白になります。';
-        dialog.append(displayHelp);
         const rulesHeading = document.createElement('h3');
         if (globalThis.matchMedia?.('(max-width: 600px)').matches) rulesHeading.style.setProperty('margin-top', '24px', 'important');
         rulesHeading.textContent = 'ルールの設定';
-        const entryHelp = document.createElement('p');
-        entryHelp.textContent = '適用したい項目にチェックを入れます。「ワード」「顔文字」「記号」は、1行に1つ入力してください。有効にした欄の登録内容が本文に含まれると、その投稿を非表示にします。複数のルールが適用される場合は、いずれかのルールで絵文字の自動判定がONなら絵文字を隠します。';
-        const notice = document.createElement('p');
-        notice.textContent = '「ワード」はカタカナの全角・半角と英字の大文字・小文字を区別しません。ひらがなとカタカナは区別します。「顔文字」と「記号」は入力どおりに判定します。';
-        dialog.append(rulesHeading, entryHelp, notice);
+        const entryHint = document.createElement('p');
+        entryHint.textContent = 'ワード・顔文字・記号は1行に1つ';
+        dialog.append(rulesHeading, entryHint);
         const emojiLabel = document.createElement('label');
         emojiLabel.style.cssText = 'display:block;margin:16px 0;';
         const emojiInput = document.createElement('input');
@@ -158,10 +156,8 @@
         const checkHeading = document.createElement('h3');
         if (globalThis.matchMedia?.('(max-width: 600px)').matches) checkHeading.style.setProperty('margin-top', '24px', 'important');
         checkHeading.textContent = '設定したルールのチェック';
-        const checkHelp = document.createElement('p');
-        checkHelp.textContent = '「ワード」「顔文字」「記号」に絵文字が含まれている行と、同じ欄の中で重複している入力を確認します。';
         const check = makeButton('ルールのチェック');
-        dialog.append(checkHeading, checkHelp);
+        dialog.append(checkHeading);
         const report = document.createElement('div');
         report.setAttribute('aria-live', 'polite');
         function capture() {
