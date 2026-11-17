@@ -2,7 +2,7 @@
 // @name         爆サイの荒らしレスをあぼーん iPhone版
 // @namespace    http://tampermonkey.net/
 // @author       xigfu
-// @version      1.35
+// @version      1.36
 // @homepageURL  https://xigfu.github.io/bakusai-abon/
 // @source       https://github.com/xigfu/bakusai-abon
 // @supportURL   https://xigfu.github.io/bakusai-abon/#help
@@ -69,9 +69,6 @@
         const title = document.createElement('h2');
         title.textContent = 'あぼーんの設定';
         dialog.append(title);
-        const info = document.createElement('p');
-        info.textContent = '1行に1個ずつ入力します。本文にどれか1個でも含まれると隠します。消したい項目は行ごと削除してください。絵文字の自動判定は下のチェックで切り替えられます。';
-        dialog.append(info);
         const drafts = profiles.map(normalize);
         if (!drafts.length) drafts.push(normalize({}));
         let selected = 0;
@@ -85,7 +82,7 @@
         const inputs = {};
         const categoryInputs = {};
         const titleLabel = document.createElement('label');
-        titleLabel.textContent = 'このルールの対象とするスレッド（1行に1つ）';
+        titleLabel.textContent = 'このルールの対象とするスレッドまたはワード（1行に1つ）';
         titleLabel.style.display = 'block';
         const titleInput = document.createElement('textarea');
         titleInput.rows = 3;
@@ -96,11 +93,14 @@
         addExpandButton(dialog, titleInput);
         inputs.titles = titleInput;
         const titleHelp = document.createElement('p');
-        titleHelp.textContent = 'このルールを適用したいスレッドのタイトルまたはタイトルに含まれるワードを設定してください。タイトルまたは見出しに、指定した言葉のどれかを含むスレッドが対象です。この設定を空欄にすると、この設定は適用されません。複数の設定に一致した場合はルールを合わせて使います。対象外のスレッドでも、この設定画面は開けます。';
+        titleHelp.textContent = '「編集するルール」で選んだルールを適用したいスレッドのタイトル、またはタイトルに含まれるワードを入力してください。指定したタイトルまたはワードのいずれかがスレッド名に含まれていれば、このルールが適用されます。空欄のまま保存すると、一覧には「タイトル未設定」と表示されます。ルールの内容は保存されますが、どのスレッドにも適用されません。同じスレッドが複数のルールの条件に一致すると、それらのルールが合わせて適用されます。';
         dialog.append(titleHelp);
         const add = makeButton('新しいルールを追加', 'font:inherit;padding:10px;margin:6px;');
         const drop = makeButton('このルールを削除', 'font:inherit;padding:10px;margin:6px;');
-        dialog.append(drop, add);
+        const ruleActions = document.createElement('div');
+        ruleActions.style.display = 'block';
+        ruleActions.append(drop, add);
+        dialog.append(ruleActions);
         const displayLabel = document.createElement('label');
         displayLabel.textContent = '非表示にした本文の表示方法';
         const displayInput = document.createElement('select');
@@ -115,7 +115,7 @@
         displayLabel.append(displayInput);
         dialog.append(displayLabel);
         const displayHelp = document.createElement('p');
-        displayHelp.textContent = '空白では本文を一時表示できません。投稿番号や日時は残ります。複数のスレッド設定が一致した場合は、すべてが「空白」のときだけ空白になります。';
+        displayHelp.textContent = '「あぼーん」を選ぶと、投稿に表示された「あぼーん」を押して本文を一時表示できます。「空白」を選ぶと、本文は一時表示できません。複数のルールが適用されるスレッドでは、適用されるルールがすべて「空白」のときだけ、隠した本文が空白になります。';
         dialog.append(displayHelp);
         const emojiLabel = document.createElement('label');
         emojiLabel.style.cssText = 'display:block;margin:16px 0;';
@@ -130,6 +130,9 @@
         const emojiHelp = document.createElement('p');
         emojiHelp.textContent = '選択中の設定に適用します。禁止ワード・顔文字・記号は、それぞれのチェックで切り替えられます。複数の設定に一致した場合、1つでもONなら絵文字を隠します。';
         dialog.append(emojiHelp);
+        const entryHelp = document.createElement('p');
+        entryHelp.textContent = '1行に1つ入力します。登録した内容が本文に含まれると、その投稿を非表示にします。';
+        dialog.append(entryHelp);
         for (const [key, labelText] of categories) {
             const toggleLabel = emojiLabel.cloneNode(true);
             const toggle = toggleLabel.querySelector('input');
