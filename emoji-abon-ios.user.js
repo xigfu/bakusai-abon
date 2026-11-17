@@ -2,7 +2,7 @@
 // @name         爆サイの荒らしレスをあぼーん iPhone版
 // @namespace    http://tampermonkey.net/
 // @author       xigfu
-// @version      1.37.5
+// @version      1.37.6
 // @homepageURL  https://xigfu.github.io/bakusai-abon/
 // @source       https://github.com/xigfu/bakusai-abon
 // @supportURL   https://xigfu.github.io/bakusai-abon/#help
@@ -157,7 +157,9 @@
         if (globalThis.matchMedia?.('(max-width: 600px)').matches) checkHeading.style.setProperty('margin-top', '24px', 'important');
         checkHeading.textContent = '設定したルールのチェック';
         const check = makeButton('ルールのチェック');
-        dialog.append(checkHeading);
+        const checkHelp = document.createElement('p');
+        checkHelp.textContent = '「ワード」「顔文字」「記号」に絵文字が含まれている行と、同じ欄の中で重複している入力を確認します。';
+        dialog.append(checkHeading, checkHelp);
         const report = document.createElement('div');
         report.setAttribute('aria-live', 'polite');
         function capture() {
