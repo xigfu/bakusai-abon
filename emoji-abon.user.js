@@ -2,7 +2,7 @@
 // @name         爆サイの荒らしレスをあぼーん
 // @namespace    http://tampermonkey.net/
 // @author       xigfu
-// @version      1.34
+// @version      1.35
 // @homepageURL  https://xigfu.github.io/bakusai-abon/
 // @source       https://github.com/xigfu/bakusai-abon
 // @supportURL   https://xigfu.github.io/bakusai-abon/#help
@@ -79,27 +79,30 @@
         let selected = 0;
         const settings = drafts[0];
         const chooserLabel = document.createElement('label');
-        chooserLabel.textContent = '編集するスレッド設定';
+        chooserLabel.textContent = '編集するルール';
         const chooser = document.createElement('select');
         chooser.style.cssText = 'box-sizing:border-box !important;display:block !important;width:100% !important;max-width:100% !important;min-width:0 !important;height:54px !important;min-height:54px !important;max-height:none !important;font:18px/1.5 sans-serif !important;padding:8px 32px 8px 10px !important;margin:8px 0 16px !important;border:2px solid #737d8c !important;border-radius:6px !important;color:#222 !important;background-color:#fff !important;appearance:auto !important;text-indent:0 !important;letter-spacing:normal !important;';
         chooserLabel.append(chooser);
         dialog.append(chooserLabel);
-        const add = makeButton('別のスレッド設定を追加', 'font:inherit;padding:10px;margin:6px;');
-        const drop = makeButton('選択中のスレッド設定を削除', 'font:inherit;padding:10px;margin:6px;');
-        dialog.append(add, drop);
-        const emojiLabel = document.createElement('label');
-        emojiLabel.style.cssText = 'display:block;margin:16px 0;';
-        const emojiInput = document.createElement('input');
-        emojiInput.type = 'checkbox';
-        emojiInput.checked = settings.emoji;
-        emojiInput.style.cssText = 'all:initial !important;appearance:auto !important;-webkit-appearance:checkbox !important;display:inline-block !important;position:static !important;visibility:visible !important;opacity:1 !important;width:24px !important;height:24px !important;margin:0 10px 0 0 !important;vertical-align:middle !important;clip:auto !important;clip-path:none !important;transform:none !important;pointer-events:auto !important;accent-color:#1159b5 !important;';
-        const emojiText = document.createElement('span');
-        emojiText.textContent = '絵文字を自動であぼーんする';
-        emojiLabel.append(emojiInput, emojiText);
-        dialog.append(emojiLabel);
-        const emojiHelp = document.createElement('p');
-        emojiHelp.textContent = '選択中の設定に適用します。禁止ワード・顔文字・記号は、それぞれのチェックで切り替えられます。複数の設定に一致した場合、1つでもONなら絵文字を隠します。';
-        dialog.append(emojiHelp);
+        const inputs = {};
+        const categoryInputs = {};
+        const titleLabel = document.createElement('label');
+        titleLabel.textContent = 'このルールの対象とするスレッド（1行に1つ）';
+        titleLabel.style.display = 'block';
+        const titleInput = document.createElement('textarea');
+        titleInput.rows = 3;
+        titleInput.style.cssText = inputStyle;
+        titleInput.value = settings.titles.join('\n');
+        titleLabel.append(titleInput);
+        dialog.append(titleLabel);
+        addExpandButton(dialog, titleInput);
+        inputs.titles = titleInput;
+        const titleHelp = document.createElement('p');
+        titleHelp.textContent = 'このルールを適用したいスレッドのタイトルまたはタイトルに含まれるワードを設定してください。タイトルまたは見出しに、指定した言葉のどれかを含むスレッドが対象です。この設定を空欄にすると、この設定は適用されません。複数の設定に一致した場合はルールを合わせて使います。対象外のスレッドでも、この設定画面は開けます。';
+        dialog.append(titleHelp);
+        const add = makeButton('新しいルールを追加', 'font:inherit;padding:10px;margin:6px;');
+        const drop = makeButton('このルールを削除', 'font:inherit;padding:10px;margin:6px;');
+        dialog.append(drop, add);
         const displayLabel = document.createElement('label');
         displayLabel.textContent = '非表示にした本文の表示方法';
         const displayInput = document.createElement('select');
@@ -116,22 +119,19 @@
         const displayHelp = document.createElement('p');
         displayHelp.textContent = '空白では本文を一時表示できません。投稿番号や日時は残ります。複数のスレッド設定が一致した場合は、すべてが「空白」のときだけ空白になります。';
         dialog.append(displayHelp);
-        const inputs = {};
-        const categoryInputs = {};
-        const titleLabel = document.createElement('label');
-        titleLabel.textContent = '対象スレッドのタイトル（1行に1つ）';
-        titleLabel.style.display = 'block';
-        const titleInput = document.createElement('textarea');
-        titleInput.rows = 3;
-        titleInput.style.cssText = inputStyle;
-        titleInput.value = settings.titles.join('\n');
-        titleLabel.append(titleInput);
-        dialog.append(titleLabel);
-        addExpandButton(dialog, titleInput);
-        inputs.titles = titleInput;
-        const titleHelp = document.createElement('p');
-        titleHelp.textContent = 'タイトルまたは見出しに、指定した言葉のどれかを含むスレッドが対象です。この設定を空欄にすると、この設定は適用されません。複数の設定に一致した場合はルールを合わせて使います。対象外のスレッドでも、この設定画面は開けます。';
-        dialog.append(titleHelp);
+        const emojiLabel = document.createElement('label');
+        emojiLabel.style.cssText = 'display:block;margin:16px 0;';
+        const emojiInput = document.createElement('input');
+        emojiInput.type = 'checkbox';
+        emojiInput.checked = settings.emoji;
+        emojiInput.style.cssText = 'all:initial !important;appearance:auto !important;-webkit-appearance:checkbox !important;display:inline-block !important;position:static !important;visibility:visible !important;opacity:1 !important;width:24px !important;height:24px !important;margin:0 10px 0 0 !important;vertical-align:middle !important;clip:auto !important;clip-path:none !important;transform:none !important;pointer-events:auto !important;accent-color:#1159b5 !important;';
+        const emojiText = document.createElement('span');
+        emojiText.textContent = '絵文字を自動であぼーんする';
+        emojiLabel.append(emojiInput, emojiText);
+        dialog.append(emojiLabel);
+        const emojiHelp = document.createElement('p');
+        emojiHelp.textContent = '選択中の設定に適用します。禁止ワード・顔文字・記号は、それぞれのチェックで切り替えられます。複数の設定に一致した場合、1つでもONなら絵文字を隠します。';
+        dialog.append(emojiHelp);
         for (const [key, labelText] of categories) {
             const toggleLabel = emojiLabel.cloneNode(true);
             const toggle = toggleLabel.querySelector('input');
@@ -198,7 +198,7 @@
             showSelected();
         });
         drop.addEventListener('click', () => {
-            if (!confirm('選択中のスレッド設定を削除しますか？ 最後に保存すると反映されます。')) return;
+            if (!confirm('このルールを削除しますか？ 最後に保存すると反映されます。')) return;
             drafts.splice(selected, 1);
             if (!drafts.length) drafts.push(normalize({}));
             selected = Math.min(selected, drafts.length - 1);
