@@ -2,11 +2,11 @@
 // @name         爆サイの荒らしレスをあぼーん iPhone版
 // @namespace    http://tampermonkey.net/
 // @author       xigfu
-// @version      1.37.1
+// @version      1.37.2
 // @homepageURL  https://xigfu.github.io/bakusai-abon/
 // @source       https://github.com/xigfu/bakusai-abon
 // @supportURL   https://xigfu.github.io/bakusai-abon/#help
-// @description  指定したタイトルのスレッドで、絵文字や設定した言葉・顔文字・記号を含む本文を「あぼーん」にします。
+// @description  指定したタイトルのスレッドで、絵文字や設定したワード・顔文字・記号を含む本文を「あぼーん」にします。
 // @match        https://bakusai.com/thr_res/*
 // @match        https://sp.bakusai.com/thr_res/*
 // @run-at       document-end
@@ -25,7 +25,7 @@
     };
     const storageKey = 'abon-settings-v1';
     const stored = (await GM.getValue(storageKey, {})) || {};
-    const categories = [['words', '禁止ワード'], ['faces', '顔文字'], ['symbols', '記号']];
+    const categories = [['words', 'ワード'], ['faces', '顔文字'], ['symbols', '記号']];
     const keys = ['titles', ...categories.map(([key]) => key)];
     const clean = value => Array.isArray(value)
         ? [...new Set(value.filter(x => typeof x === 'string').map(x => x.trim()).filter(Boolean))] : [];
@@ -122,9 +122,9 @@
         if (globalThis.matchMedia?.('(max-width: 600px)').matches) rulesHeading.style.setProperty('margin-top', '24px', 'important');
         rulesHeading.textContent = 'ルールの設定';
         const entryHelp = document.createElement('p');
-        entryHelp.textContent = '適用したい項目にチェックを入れます。「禁止ワード」「顔文字」「記号」は、1行に1つ入力してください。有効にした欄の登録内容が本文に含まれると、その投稿を非表示にします。複数のルールが適用される場合は、いずれかのルールで絵文字の自動判定がONなら絵文字を隠します。';
+        entryHelp.textContent = '適用したい項目にチェックを入れます。「ワード」「顔文字」「記号」は、1行に1つ入力してください。有効にした欄の登録内容が本文に含まれると、その投稿を非表示にします。複数のルールが適用される場合は、いずれかのルールで絵文字の自動判定がONなら絵文字を隠します。';
         const notice = document.createElement('p');
-        notice.textContent = '「禁止ワード」はカタカナの全角・半角と英字の大文字・小文字を区別しません。ひらがなとカタカナは区別します。「顔文字」と「記号」は入力どおりに判定します。';
+        notice.textContent = '「ワード」はカタカナの全角・半角と英字の大文字・小文字を区別しません。ひらがなとカタカナは区別します。「顔文字」と「記号」は入力どおりに判定します。';
         dialog.append(rulesHeading, entryHelp, notice);
         const emojiLabel = document.createElement('label');
         emojiLabel.style.cssText = 'display:block;margin:16px 0;';
@@ -159,7 +159,7 @@
         if (globalThis.matchMedia?.('(max-width: 600px)').matches) checkHeading.style.setProperty('margin-top', '24px', 'important');
         checkHeading.textContent = '設定したルールのチェック';
         const checkHelp = document.createElement('p');
-        checkHelp.textContent = '「禁止ワード」「顔文字」「記号」に絵文字が含まれている行と、同じ欄の中で重複している入力を確認します。';
+        checkHelp.textContent = '「ワード」「顔文字」「記号」に絵文字が含まれている行と、同じ欄の中で重複している入力を確認します。';
         const check = makeButton('ルールのチェック');
         dialog.append(checkHeading, checkHelp);
         const report = document.createElement('div');
@@ -274,7 +274,7 @@
         const reset = makeButton('保存設定を削除して初期状態に戻す', 'display:block;font:inherit;padding:12px;margin:18px 6px 6px;');
         reset.addEventListener('click', async () => {
             if (busy) return;
-            if (!confirm('すべてのスレッドの保存設定と、保存前の入力内容を破棄して、初期設定に戻しますか？\n絵文字の自動判定：ON\n対象タイトル：大番会館 新宿店\n禁止ワード・顔文字・記号の判定：すべてON\n禁止ワード：朱なみ、アカナミ、戌\n顔文字：(*^-^)、(・・?\n記号：♪\nこの操作は取り消せません。ページを読み直します。')) return;
+            if (!confirm('すべてのスレッドの保存設定と、保存前の入力内容を破棄して、初期設定に戻しますか？\n絵文字の自動判定：ON\n対象タイトル：大番会館 新宿店\nワード・顔文字・記号の判定：すべてON\nワード：朱なみ、アカナミ、戌\n顔文字：(*^-^)、(・・?\n記号：♪\nこの操作は取り消せません。ページを読み直します。')) return;
             busy = true;
             save.disabled = reset.disabled = cancel.disabled = true;
             try {
