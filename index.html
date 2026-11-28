@@ -86,12 +86,16 @@
 </section>
 <section id="samples"><h2>登録するワードのサンプル</h2>
 <p>必要なものだけ選んで使ってください。<strong>普通の投稿も、登録した文字を含むだけで非表示になります。</strong>特に短い語や記号は広く一致します。各一覧は編集できるので、不要な行を消してからコピーできます。ここで編集してもスクリプトの設定は変わりません。</p>
-<ol><li>使いたい分類を開き、不要な行を削除します。</li><li>「コピー」を押します。</li><li>掲示板のタブへ戻り、「あぼーん設定」で対象のスレッド設定を選びます。</li><li>同じ分類の入力欄へ貼り付けます。既存の登録を残す場合は、欄の末尾で改行してから貼り付けてください。</li><li>「保存してページを読み直す」を押します。</li></ol><details><summary>ワードのサンプル（145個）</summary><label for="sample-words">必要に応じて行を削除できます</label><textarea id="sample-words" rows="8" spellcheck="false" style="box-sizing:border-box;width:100%;font:18px/1.6 sans-serif;margin:12px 0;">洗浄
+<ol><li>使いたい分類を開き、不要な行を削除します。</li><li>「コピー」を押します。</li><li>掲示板のタブへ戻り、「あぼーん設定」で対象のスレッド設定を選びます。</li><li>同じ分類の入力欄へ貼り付けます。既存の登録を残す場合は、欄の末尾で改行してから貼り付けてください。</li><li>「保存してページを読み直す」を押します。</li></ol><details><summary>ワードのサンプル（151個）</summary><label for="sample-words">必要に応じて行を削除できます</label><textarea id="sample-words" rows="8" spellcheck="false" style="box-sizing:border-box;width:100%;font:18px/1.6 sans-serif;margin:12px 0;">洗浄
 釘
 場内
 番台
 銀玉
 回転
+3連
+4連
+5連
+6連
 7連
 大当たり
 単発
@@ -124,6 +128,7 @@
 あーた
 貴方
 貴女
+彼女
 兄さん
 デストラ
 戌
@@ -131,7 +136,7 @@
 いぬ
 某ビル
 貴松
-爽やか
+爽
 さわやか
 ヤング
 ウリボー
@@ -186,6 +191,7 @@ poison
 example
 thank
 anus
+smell
 オーマン
 泉
 アヌス
@@ -244,7 +250,7 @@ m(__)m
 (^人^)
 (?_?)
 (●^o^●)
-(*^-゜)v</textarea><button type="button" data-sample-copy="faces" data-goatcounter-click="copy-sample-faces" data-goatcounter-no-session="1">顔文字のサンプルをコピー</button><p id="sample-status-faces" role="status"></p></details><details><summary>記号のサンプル（17個）</summary><label for="sample-symbols">必要に応じて行を削除できます</label><textarea id="sample-symbols" rows="8" spellcheck="false" style="box-sizing:border-box;width:100%;font:18px/1.6 sans-serif;margin:12px 0;">♪
+(*^-゜)v</textarea><button type="button" data-sample-copy="faces" data-goatcounter-click="copy-sample-faces" data-goatcounter-no-session="1">顔文字のサンプルをコピー</button><p id="sample-status-faces" role="status"></p></details><details><summary>記号のサンプル（18個）</summary><label for="sample-symbols">必要に応じて行を削除できます</label><textarea id="sample-symbols" rows="8" spellcheck="false" style="box-sizing:border-box;width:100%;font:18px/1.6 sans-serif;margin:12px 0;">♪
 ⇑
 Δ
 ∀
@@ -260,7 +266,8 @@ m(__)m
 ♡
 ✿
 ◍
-o</textarea><button type="button" data-sample-copy="symbols" data-goatcounter-click="copy-sample-symbols" data-goatcounter-no-session="1">記号のサンプルをコピー</button><p id="sample-status-symbols" role="status"></p></details><p>「❤」はサンプルに含めていません。絵文字の自動判定がONなら自動で非表示になります。OFFの場合は「❤」だけでは隠れません。「♡」「✿」「◍」は記号のサンプルに入れています。</p></section><section id="help"><h2>うまくいかないとき</h2><div id="standard-help"><p>Tampermonkeyの「バグを報告」からも、この説明が開きます。現在、不具合報告の受付窓口は設けていません。まずは以下の対処方法を確認してください。</p>
+o
+⋯</textarea><button type="button" data-sample-copy="symbols" data-goatcounter-click="copy-sample-symbols" data-goatcounter-no-session="1">記号のサンプルをコピー</button><p id="sample-status-symbols" role="status"></p></details><p>「❤」はサンプルに含めていません。絵文字の自動判定がONなら自動で非表示になります。OFFの場合は「❤」だけでは隠れません。「♡」「✿」「◍」は記号のサンプルに入れています。</p></section><section id="help"><h2>うまくいかないとき</h2><div id="standard-help"><p>Tampermonkeyの「バグを報告」からも、この説明が開きます。現在、不具合報告の受付窓口は設けていません。まずは以下の対処方法を確認してください。</p>
 <details id="android-link-help"><summary>AndroidでリンクがChromeやGoogleで開く</summary><p>Firefoxを開いて、この案内ページのアドレスをFirefoxのアドレス欄に貼り付けてください。下のボタンでコピーできます。</p><button id="copy" type="button" data-goatcounter-click="copy-guide-url" data-goatcounter-no-session="1">この案内のアドレスをコピー</button><p id="copy-result" role="status"></p></details>
 <details><summary>英語や記号がたくさん出た／ファイルが保存された</summary><p>プログラムの中身がそのまま表示されています。コピーして貼り付ける必要はありません。選んだブラウザで開いているか、Tampermonkeyが追加済みで有効か確認してください。PC版Chromeでは「ユーザースクリプトを許可」も確認します。その後、この案内のタブへ戻り「3」のボタンをもう一度押します。解決しなければ、そこで操作を止めてください。</p></details>
 <details><summary>追加したのに表示が変わらない</summary><p>選んだブラウザの通常のタブで見ているか確認してください。ブラウザの拡張機能メニューからTampermonkeyを開き、無効になっていないか確認します。Tampermonkeyの管理画面（ダッシュボード）でも、あぼーん用スクリプトが有効か確認してください。掲示板側の画面の作りによっては動かない場合があります。</p></details>
